@@ -4,30 +4,78 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIPaDE - Sistem Pangkalan Data Elektronik</title>
+    <!-- Favicon / Ikon Tab Browser -->
+    <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/9/9d/Logo_Tut_Wuri_Handayani.png" type="image/png">
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background-color: #f8fafc; font-family: 'Inter', sans-serif; }
-        iframe { width: 100%; height: 100%; border: none; }
-        .loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #fff; z-index: 9999; transition: opacity 0.5s; }
-        .spinner { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #2563eb; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .hidden { opacity: 0; pointer-events: none; }
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background-color: #f8fafc;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* Styling untuk Iframe */
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+        
+        /* Tampilan Loading sementara (sebelum iframe termuat sepenuhnya) */
+        .loading-screen {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: -1;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e2e8f0;
+            border-top: 4px solid #2563eb;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 16px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
-    <div id="loader" class="loader">
+    
+    <!-- Animasi Loading -->
+    <div class="loading-screen">
         <div class="spinner"></div>
         <h2 style="margin:0; color:#1e293b; font-size:20px;">Memuat SIPaDE...</h2>
-        <p style="margin:5px 0 0 0; color:#64748b; font-size:14px;">Menghubungkan ke Pangkalan Data</p>
+        <div style="margin:5px 0 0 0; color: #64748b; font-size: 14px;">Menghubungkan ke Pangkalan Data</div>
     </div>
-    
-    <!-- IFRAME yang mengarah ke Apps Script -->
-    <iframe id="sipadeFrame" onload="document.getElementById('loader').classList.add('hidden')" allow="fullscreen"></iframe>
+
+    <!-- Iframe yang URL-nya diset melalui JavaScript -->
+    <iframe id="sipadeFrame" title="SIPaDE App" allow="fullscreen"></iframe>
 
     <script>
         // MASUKKAN URL WEB APP ANDA DI BAWAH INI:
         var gasUrl = "https://script.google.com/macros/s/AKfycbzwOlf_73tksMuAuMt0GsaUKEjHq9UVb3y1mstBXCh3bNIkMVsUNJrkUMDYoKPn7Tm83w/exec";
         
-        document.getElementById('sipadeFrame').src = gasUrl + "?t=" + new Date().getTime();
+        var params = window.location.search;
+        if (params) {
+            gasUrl += params + "&authuser=0";
+        } else {
+            gasUrl += "?authuser=0";
+        }
+        
+        document.getElementById('sipadeFrame').src = gasUrl;
     </script>
 </body>
 </html>
