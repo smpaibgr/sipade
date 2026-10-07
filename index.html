@@ -67,24 +67,26 @@
     <script>
         var gasUrl = "https://script.google.com/macros/s/AKfycbzwOlf_73tksMuAuMt0GsaUKEjHq9UVb3y1mstBXCh3bNIkMVsUNJrkUMDYoKPn7Tm83w/exec";
         
-        var params = window.location.search;
-        var hash = window.location.hash;
+        var urlParams = new URLSearchParams(window.location.search);
+        var pageParam = urlParams.get('page');
         
-        if (params) {
-            gasUrl += params + "&authuser=0";
+        // Teruskan page dari URL Github ke Apps Script menggunakan hash (karena Apps Script SPA membaca dari hash)
+        if (pageParam) {
+            gasUrl += "?authuser=0#" + pageParam;
         } else {
             gasUrl += "?authuser=0";
-        }
-        if (hash) {
-            gasUrl += hash;
         }
         
         document.getElementById('sipadeFrame').src = gasUrl;
 
         window.addEventListener('message', function(e) {
             if (e.data && e.data.type === 'SIPADE_URL_CHANGED') {
-                if (window.location.hash !== e.data.hash) {
-                    history.replaceState(null, null, e.data.hash);
+                var newUrl = new URL(window.location.href);
+                // Menyamakan format dengan SIKAPEL (?page=...)
+                var pageName = e.data.hash.replace('#', '');
+                newUrl.searchParams.set('page', pageName);
+                if (window.location.search !== newUrl.search) {
+                    history.replaceState(null, null, newUrl.href);
                 }
             }
         });
