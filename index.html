@@ -65,17 +65,29 @@
     <iframe id="sipadeFrame" title="SIPaDE App" allow="fullscreen"></iframe>
 
     <script>
-        // MASUKKAN URL WEB APP ANDA DI BAWAH INI:
         var gasUrl = "https://script.google.com/macros/s/AKfycbzwOlf_73tksMuAuMt0GsaUKEjHq9UVb3y1mstBXCh3bNIkMVsUNJrkUMDYoKPn7Tm83w/exec";
         
         var params = window.location.search;
+        var hash = window.location.hash;
+        
         if (params) {
             gasUrl += params + "&authuser=0";
         } else {
             gasUrl += "?authuser=0";
         }
+        if (hash) {
+            gasUrl += hash;
+        }
         
         document.getElementById('sipadeFrame').src = gasUrl;
+
+        window.addEventListener('message', function(e) {
+            if (e.data && e.data.type === 'SIPADE_URL_CHANGED') {
+                if (window.location.hash !== e.data.hash) {
+                    history.replaceState(null, null, e.data.hash);
+                }
+            }
+        });
     </script>
 </body>
 </html>
