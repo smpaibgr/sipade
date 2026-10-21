@@ -70,9 +70,9 @@
         var urlParams = new URLSearchParams(window.location.search);
         var pageParam = urlParams.get('page');
         
-        // Teruskan page dari URL Github ke Apps Script menggunakan hash (karena Apps Script SPA membaca dari hash)
+        // Teruskan parameter page dari URL Github ke Apps Script via query param & hash
         if (pageParam) {
-            gasUrl += "#" + pageParam;
+            gasUrl += "?page=" + encodeURIComponent(pageParam) + "#" + encodeURIComponent(pageParam);
         }
         
         document.getElementById('sipadeFrame').src = gasUrl;
